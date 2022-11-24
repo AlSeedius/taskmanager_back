@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import so.ups.taskmanager.dev.DAO.UserRepository;
+import so.ups.taskmanager.dev.DAO.OldUserRepository;
 import so.ups.taskmanager.dev.entitites.User;
 import so.ups.taskmanager.dev.reponses.JwtResponse;
 import so.ups.taskmanager.dev.reponses.MessageResponse;
@@ -25,7 +25,7 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    OldUserRepository oldUserRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -51,19 +51,18 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (oldUserRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: username is already taken!"));
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (oldUserRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user account
         User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        userRepository.save(user);
+        oldUserRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("user registered successfully!"));
     }
