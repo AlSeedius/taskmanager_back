@@ -7,7 +7,7 @@ import so.ups.taskmanager.dev.entitites.User;
 import java.util.Optional;
 
 @Repository
-public interface OldUserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findByUsername(String username);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
